@@ -419,8 +419,7 @@ tangram.formula <- function(x, data=NULL, id=NULL, transforms=NULL, caption=NULL
   if(!is.null(data) && (length(class(data)) > 1 || !inherits(data,"data.frame"))) stop("data must be supplied as data frame")
   if(is.null(id) && "knitr" %in% .packages()) id <- knitr::opts_current$get("label")
   if(is.null(id)) warning("tangram() will require unique id to be specified in the future")
-  if(is.null(transforms)) transforms <- get(style, envir=globalenv())
-  if(is.null(transforms)) transforms <- get(style)
+  if(is.null(transforms)) transforms <- tryCatch(get(style, envir=globalenv()), error = get(style))
 
   # Helper function for single transform function
   if(!inherits(transforms, "list"))
@@ -615,7 +614,7 @@ tangram.matrix <- function(x, digits=NULL, ...)
 #' @export
 tangram.tbl_df <- function(x, ...)
 {
-  tangram(as.data.frame(x), as.character=TRUE, ...)
+  tangram(as.data.frame(x), as.character=TRUE, colheader=colnames(x), ...)
 }
 
 #' @rdname tangram
